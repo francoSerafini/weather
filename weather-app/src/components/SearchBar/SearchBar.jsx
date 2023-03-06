@@ -1,10 +1,8 @@
 import React from "react";
 import axios from "axios";
 
-const SearchBar = () => {
+const SearchBar = (props) => {
   const [city, setCity] = React.useState("");
-
-  let data;
 
   function handleChange(event) {
     setCity(event.target.value);
@@ -12,10 +10,9 @@ const SearchBar = () => {
 
   function handleSubmit() {
     axios(`http://localhost:3001/${city}`).then((res) => {
+      if (!res.data[0].city) return alert("City " + city + " not found.");
+      props.setData(res.data);
       console.log(res.data);
-      data = res.data;
-      console.log(data);
-      return data;
     });
     setCity("");
   }
