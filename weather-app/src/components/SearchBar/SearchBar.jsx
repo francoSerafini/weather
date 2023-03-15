@@ -1,20 +1,11 @@
 import React from "react";
-import axios from "axios";
+import { Link } from "react-router-dom";
 
 const SearchBar = (props) => {
   const [city, setCity] = React.useState("");
 
   function handleChange(event) {
     setCity(event.target.value);
-  }
-
-  function handleSubmit() {
-    axios(`http://localhost:3001/${city}`).then((res) => {
-      if (!res.data[0].city) return alert("City " + city + " not found.");
-      props.setData(res.data);
-      console.log(res.data);
-    });
-    setCity("");
   }
 
   return (
@@ -27,9 +18,11 @@ const SearchBar = (props) => {
         onChange={handleChange}
       />
       <div className="Search">
-        <button type="submit" onClick={handleSubmit}>
-          SEARCH
-        </button>
+        <Link to={`/${city}`}>
+          <button type="submit" onClick={() => setCity("")}>
+            SEARCH
+          </button>
+        </Link>
       </div>
     </form>
   );

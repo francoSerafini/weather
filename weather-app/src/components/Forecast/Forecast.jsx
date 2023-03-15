@@ -8,26 +8,25 @@ const Forecast = (props) => {
     new Date().toLocaleTimeString("en-GB").slice(0, 5)
   );
 
-  async function getDefault() {
-   await axios(`http://localhost:3001/buenos%20aires`).then((res) => {
-      return res.data;
-    });
-  }
+  let [data, setData] = React.useState({});
 
-  let [data, setData] = React.useState(getDefault());
+  let city = props.match.params.city;
 
   setTimeout(() => {
     setTime(new Date().toLocaleTimeString("en-GB").slice(0, 5));
   }, 60000);
 
   React.useEffect(() => {
-    console.log(data);
-  }, [data]);
+    axios(`http://localhost:3001/${city}`).then((res) => {
+      if (!res.data[0].city) return alert("City " + city + " not found.");
+      setData(res.data);
+    });
+  });
 
   return (
     <div>
-      <SearchBar setData={setData} />
-      {data && data[0] && data[0].city && (
+      <SearchBar />
+      {data && data[0] && data[0].img && (
         <div>
           <h1>{time}</h1>
           <h3>{data[0].date}</h3>
@@ -35,7 +34,7 @@ const Forecast = (props) => {
             {data[0].city}, {data[0].country}
           </h2>
           <Card
-            img0={data[0].img}
+            image0={data[0].img}
             temp0={data[0].temp}
             date1={data[1].date.slice(0, 3)}
             image1={data[1].img}
